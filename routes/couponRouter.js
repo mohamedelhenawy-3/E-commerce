@@ -8,8 +8,8 @@ const {
 } = require("../controller/couponController");
 const router = express.Router();
 
-router.post("/", [admin], createCoupon);
-router.get("/", [admin], getAllCoupons);
+router.post("/", createCoupon);
+router.get("/", getAllCoupons);
 router.get("/:id", [admin], getAllCoupons);
 router.put("/:id", [admin], updateCoupon);
 router.delete("/:id", [admin], deleteCoupon);

@@ -15,9 +15,7 @@ app.use(cors());
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/product", require("./routes/productRoute"));
-// app.use("/api/blog", require("./routes/blogRoute"));
 app.use("/api/productCategory", require("./routes/productCatRoute"));
-// app.use("/api/blogCategory", require("./routes/blogCatRoute"));
 app.use("/api/coupon", require("./routes/couponRouter"));
 app.all("*", (req, res, next) => {
   next(new errorResponse(`Cant find this Route ::${req.originalUrl}`, 400));
