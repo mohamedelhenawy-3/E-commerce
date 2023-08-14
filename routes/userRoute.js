@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const isAdmin = require("../middlware/isAdmin");
+const admin = require("../middlware/isAdmin");
+const auth = require("../middlware/authMiddlware");
 const {
   signUp,
   allUsers,
@@ -7,13 +8,18 @@ const {
   deleteUser,
   blockUser,
   unblockUser,
+  userCart,
+  getUserCart,
+  emptyCart,
 } = require("../controller/userController");
 router.post("/signUp", signUp);
-router.get("/getUsers", allUsers);
+router.get("/getUsers", [admin], allUsers);
 router.put("/update", UpdateData);
-router.delete("/deleteUser/:userId", deleteUser);
+router.delete("/deleteUser/:userId", [admin], deleteUser);
 //blocke-unblock user by admin
-router.put("/blockUser/:id", [isAdmin], blockUser);
-router.put("/unBlockUser/:id", [isAdmin], unblockUser);
-
+router.put("/blockUser/:id", [admin], blockUser);
+router.put("/unBlockUser/:id", [admin], unblockUser);
+router.post("/cart", [auth], userCart);
+router.get("/cart", [auth], getUserCart);
+router.delete("/empty-cart", [auth], emptyCart);
 module.exports = router;

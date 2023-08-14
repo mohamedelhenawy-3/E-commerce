@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
   firstName: {
@@ -64,6 +65,12 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now(),
