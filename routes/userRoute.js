@@ -17,6 +17,7 @@ const {
   createOrder,
   updateOrderStatus,
 } = require("../controller/userController");
+
 router.post("/signUp", signUp);
 router.get("/getUsers", [admin], allUsers);
 router.put("/update", UpdateData);
@@ -33,4 +34,5 @@ router.get("/get-orders", getOrders);
 router.get("/getallorders", getAllOrders);
 router.post("/getorderbyuser/:id", getAllOrders);
 router.put("/order/update-order/:id", updateOrderStatus);
+
 module.exports = router;

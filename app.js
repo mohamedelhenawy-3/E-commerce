@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-
+require("dotenv").config();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -16,7 +16,10 @@ app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/product", require("./routes/productRoute"));
 app.use("/api/productCategory", require("./routes/productCatRoute"));
+
+app.use("/api/brand", require("./routes/brandRoute"));
 app.use("/api/coupon", require("./routes/couponRouter"));
+
 app.all("*", (req, res, next) => {
   next(new errorResponse(`Cant find this Route ::${req.originalUrl}`, 400));
 });

@@ -8,7 +8,7 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controller/productController");
-router.post("/createProduct/:categoryId", [admin], createProduct);
+router.post("/createProduct/:categoryId/:brandId", [admin], createProduct);
 router.get("/getAllProduct", [auth, admin], allProduct);
 router.put("/wishlist", [auth], addToWishlist);
 router.put("/:id", [admin], updateProduct);

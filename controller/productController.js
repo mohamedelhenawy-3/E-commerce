@@ -2,6 +2,7 @@ const Product = require("../models/productModel");
 const errResponse = require("../utils/errResponse");
 const User = require("../models/userModel");
 const productCategory = require("../models/productCategory");
+const Brand = require("../models/brandModel");
 const allProduct = async (req, res) => {
   try {
     // Filtering
@@ -49,11 +50,12 @@ const allProduct = async (req, res) => {
 };
 const createProduct = async (req, res, next) => {
   try {
-    const { title, description, color, price, quantity, slug, brand } =
-      req.body;
+    const { title, description, color, price, quantity, slug } = req.body;
 
     const categoryId = req.params.categoryId;
     const category = await productCategory.findById(categoryId);
+    const brandId = req.params.brandId;
+    const brand = await Brand.findById(brandId);
 
     if (!category) {
       return res.status(404).json({ message: "Category not found" });

@@ -14,8 +14,8 @@ const productSchema = new Schema({
     maxlength: 255,
   },
   brand: {
-    type: String,
-    require: true,
+    type: Schema.Types.ObjectId,
+    ref: "Brand",
   },
   sold: {
     type: Number,
