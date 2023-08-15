@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const admin = require("../middlware/isAdmin");
 const auth = require("../middlware/authMiddlware");
+const Upload = require("../utils/multer");
 const {
   signUp,
   allUsers,
@@ -34,5 +35,6 @@ router.get("/get-orders", getOrders);
 router.get("/getallorders", getAllOrders);
 router.post("/getorderbyuser/:id", getAllOrders);
 router.put("/order/update-order/:id", updateOrderStatus);
+router.put("/updateProfile/:userId", Upload.single("image"), updateProfile);
 
 module.exports = router;

@@ -75,6 +75,16 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  profileimg: {
+    public_id: {
+      type: String,
+      default: null,
+    },
+    url: {
+      type: String,
+      default: null,
+    },
+  },
 });
 
 // const validateUser = (user) => {

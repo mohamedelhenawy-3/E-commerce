@@ -284,6 +284,44 @@ const updateOrderStatus = async (req, res) => {
     throw new Error(error);
   }
 };
+const updateProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    const cloudinaryOptions = {
+      folder: `/usersProfiles/${user._id}`,
+      quality: "auto:low", // Set the quality to low
+      transformation: [
+        { width: 300, height: 300, crop: "limit" }, // Resize the image to a smaller size
+      ],
+    };
+
+    const cloudinaryResponse = await Cloudinary.uploader.upload(
+      req.file.path,
+      cloudinaryOptions
+    );
+
+    console.log(req.file);
+
+    const updateUser = user;
+    if (updateUser.profileimg) {
+      updateUser.profileimg.public_id = cloudinaryResponse.public_id;
+      updateUser.profileimg.url = cloudinaryResponse.url;
+    } else {
+      updateUser.profileimg = {
+        public_id: cloudinaryResponse.public_id,
+        url: cloudinaryResponse.url,
+      };
+    }
+
+    await updateUser.save();
+    res.status(200).json({
+      message: "Profile image updated successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports = {
   signUp,
@@ -302,4 +340,5 @@ module.exports = {
   getAllOrders,
   createOrder,
   getOrders,
+  updateProfile,
 };

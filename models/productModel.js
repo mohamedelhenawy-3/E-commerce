@@ -46,6 +46,16 @@ const productSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "PCategory",
   },
+  productImage: {
+    public_id: {
+      type: String,
+      default: null, // Set default value to null or remove the default option
+    },
+    url: {
+      type: String,
+      default: null, // Set default value to null or remove the default option
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
