@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const Joi = require("joi");
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
   firstName: {
@@ -85,34 +86,45 @@ const userSchema = new Schema({
       default: null,
     },
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
 });
+const validateUser = (user) => {
+  const schema = Joi.object({
+    firstName: Joi.string().required().min(1).max(255),
+    phone: Joi.string().required().pattern(new RegExp("^01\\d{9}$")),
+    lastName: Joi.string().required().min(1).max(255),
+    email: Joi.string()
+      .required()
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+    //assword must contain at least one letter ([A-Za-z]) and one digit (\\d), and must be at least 5 characters long ({5,}).
+    password: Joi.string()
+      .required()
+      .pattern(new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$")),
+    confirmPassword: Joi.string().required(),
+    cloudinary_id: Joi.string(),
+    url: Joi.string(),
+    isAdmin: Joi.boolean(),
+    resetPasswordToken: Joi.string(),
+    resetPasswordExpires: Joi.date(),
+    createdAt: Joi.date(),
+  });
 
-// const validateUser = (user) => {
-//   const schema = Joi.object({
-//     firstName: Joi.string().required().min(1).max(255),
-//     lastName: Joi.string().required().min(1).max(255),
-//     email: Joi.string()
-//       .required()
-//       .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-//       //assword must contain at least one letter ([A-Za-z]) and one digit (\\d), and must be at least 5 characters long ({5,}).
-//     password: Joi.string()
-//       .required()
-//       .pattern(new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{5,}$')),
-//    confirmPassword: Joi.string().required(),
-//     cloudinary_id: Joi.string(),
-//     url: Joi.string(),
-//     enrolledCourses: Joi.array().items(Joi.string()),
-//     isAdmin: Joi.boolean(),
-//     resetPasswordToken: Joi.string(),
-//     resetPasswordExpires: Joi.date(),
-//     createdAt: Joi.date(),
-//   });
+  return schema.validate(user);
+};
 
-//   return schema.validate(user);
-// };
 userSchema.methods.generateAuthToken = function () {
   //return token idd and when admin it will return id and isAdmin:true
   return jwt.sign({ id: this._id, isAdmin: this.isAdmin }, "privateKey"); //returns token
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = {
+  User: mongoose.model("User", userSchema),
+  validateUser: validateUser,
+};

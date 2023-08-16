@@ -12,11 +12,16 @@ const {
   UpdateProductImage,
 } = require("../controller/productCatController");
 
-router.post("/", [admin], createCategory);
-router.put("/:id", [admin], updateCategory);
-router.delete("/:id", [admin], deleteCategory);
-router.get("/:id", [auth, admin], getCategory);
-router.get("/", [auth, admin], getallCategory);
-router.put("/productImage/:id", Upload.single("file"), UpdateProductImage);
+router.post("/", [auth, admin], createCategory);
+router.put("/:id", [auth, admin], updateCategory);
+router.delete("/:id", [auth, admin], deleteCategory);
+router.get("/:id", getCategory);
+router.get("/", getallCategory);
+router.put(
+  "/productImage/:id",
+  [auth, admin],
+  Upload.single("file"),
+  UpdateProductImage
+);
 
 module.exports = router;

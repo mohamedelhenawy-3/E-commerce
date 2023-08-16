@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const { User, validateUser } = require("../models/userModel");
 const errResponse = require("../utils/errResponse");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,6 +7,9 @@ const Coupon = require("../models/couponModel");
 const Product = require("../models/productModel");
 const Order = require("../models/orderModel");
 const signUp = async (req, res, next) => {
+  const { error } = validateUser(req.body);
+  if (error) return next(new ErrorResponse(error.details[0].message));
+
   const { firstName, lastName, phone, email, confirmPassword, password } =
     req.body;
 

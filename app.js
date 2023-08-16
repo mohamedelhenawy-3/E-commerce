@@ -19,6 +19,7 @@ app.use("/api/productCategory", require("./routes/productCatRoute"));
 
 app.use("/api/brand", require("./routes/brandRoute"));
 app.use("/api/coupon", require("./routes/couponRouter"));
+app.use("/api/forgetPass", require("./routes/forgetPassword"));
 
 app.all("*", (req, res, next) => {
   next(new errorResponse(`Cant find this Route ::${req.originalUrl}`, 400));
