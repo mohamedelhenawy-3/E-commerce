@@ -6,12 +6,13 @@ const {
   getAllCoupons,
   updateCoupon,
   deleteCoupon,
+  getCoupon,
 } = require("../controller/couponController");
 const router = express.Router();
 
-router.post("/", [auth, admin], createCoupon);
-router.get("/", [auth, admin], getAllCoupons);
-router.get("/:id", [auth, admin], getAllCoupons);
+router.post("/", createCoupon);
+router.get("/", getAllCoupons);
+router.get("/:id", getCoupon);
 router.put("/:id", [auth, admin], updateCoupon);
 router.delete("/:id", [auth, admin], deleteCoupon);
 

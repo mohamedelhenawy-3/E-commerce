@@ -7,14 +7,18 @@ const {
   addToWishlist,
   updateProduct,
   deleteProduct,
+  oneProduct,
 } = require("../controller/productController");
 router.post(
   "/createProduct/:categoryId/:brandId",
   [auth, admin],
   createProduct
 );
-router.get("/getAllProduct", [auth, admin], allProduct);
-router.put("/wishlist", [auth], addToWishlist);
-router.put("/:id", [auth, admin], updateProduct);
-router.delete("/:id", [auth, admin], deleteProduct);
+router.get("/getAllProduct", [auth, admin], allProduct); //[auth, admin]
+router.put("/wishlist", [auth], addToWishlist); //[auth],
+router.put("/:id", [auth, admin], updateProduct); //[auth, admin],
+router.delete("/:id", [auth, admin], deleteProduct); // [auth, admin],
+//get one product
+router.get("/getProduct/:productId", oneProduct);
+
 module.exports = router;

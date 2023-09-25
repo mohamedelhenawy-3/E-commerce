@@ -113,17 +113,18 @@ const addToWishlist = async (req, res) => {
   }
 };
 const updateProduct = async (req, res) => {
-  const id = req.params;
+  const id = req.params.id; // Get the id from the request parameters
   try {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const updateProduct = await Product.findOneAndUpdate({ id }, req.body, {
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    res.json(updateProduct);
+    res.json({ message: "updated succefully" });
   } catch (error) {
-    throw new Error(error);
+    console.error(error);
+    res.status(500).json({ error: "Failed to update product" });
   }
 };
 
@@ -137,10 +138,21 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const oneProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.productId);
+    if (!product) return new errResponse("Not found product");
+    res.json(product);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   createProduct,
   allProduct,
   addToWishlist,
   deleteProduct,
   updateProduct,
+  oneProduct,
 };

@@ -1,7 +1,8 @@
-const router = require("express").Router();
+const Upload = require("../utils/multer");
+const express = require("express");
 const admin = require("../middlware/isAdmin");
 const auth = require("../middlware/authMiddlware");
-const Upload = require("../utils/multer");
+const router = express.Router();
 const {
   signUp,
   allUsers,
@@ -21,7 +22,7 @@ const {
 } = require("../controller/userController");
 
 router.post("/signUp", signUp);
-router.get("/getUsers", [admin], allUsers);
+router.get("/getUsers", [admin, auth], allUsers);
 router.put("/update", [admin, auth], UpdateData);
 router.delete("/deleteUser/:userId", [admin], deleteUser);
 //blocke-unblock user by admin

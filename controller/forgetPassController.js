@@ -2,8 +2,9 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const ErrorResponse = require("../utils/errResponse");
+const Joi = require("joi");
 
 const postReset = async (req, res, next) => {
   try {
@@ -81,7 +82,15 @@ const postResetNewPassword = async (req, res, next) => {
     next(err);
   }
 };
+const validatePassword = (data) => {
+  const schema = Joi.object({
+    token: Joi.string().required(), // Add the "token" field to the schema
+    password: Joi.string().min(5).required(),
+    confirmPassword: Joi.string().min(5).required(),
+  });
 
+  return schema.validate(data);
+};
 module.exports = {
   postCheckToken,
   postReset,

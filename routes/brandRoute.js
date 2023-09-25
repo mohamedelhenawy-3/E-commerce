@@ -12,15 +12,10 @@ const {
   getallBrand,
 } = require("../controller/brandController");
 
-router.post("/", [auth, admin], createBrand);
-router.put(
-  "/uploadBrandimage/:id",
-  [auth, admin],
-  Upload.array("files"),
-  uploadBrandImage
-);
+router.post("/", createBrand);
+router.put("/uploadBrandimage/:id", Upload.array("files"), uploadBrandImage);
 
-router.put("/:id", [auth, admin], updateBrand);
+router.put("/:id", updateBrand);
 router.delete("/:brandId/:productId", [auth, admin], deleteBrand);
 router.get("/:id", getBrand);
 router.get("/", getallBrand);

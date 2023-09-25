@@ -54,7 +54,7 @@ const updateBrand = async (req, res) => {
     const updatedBrand = await Brand.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    res.json(updatedBrand);
+    res.json({ message: "Upadet brand data succefully" });
   } catch (error) {
     throw new Error(error);
   }

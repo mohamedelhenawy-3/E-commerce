@@ -13,7 +13,7 @@ const {
 } = require("../controller/productCatController");
 
 router.post("/", [auth, admin], createCategory);
-router.put("/:id", [auth, admin], updateCategory);
+router.put("/:id", updateCategory);
 router.delete("/:id", [auth, admin], deleteCategory);
 router.get("/:id", getCategory);
 router.get("/", getallCategory);

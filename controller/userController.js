@@ -1,11 +1,11 @@
 const { User, validateUser } = require("../models/userModel");
 const errResponse = require("../utils/errResponse");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Cart = require("../models/cartModel");
 const Coupon = require("../models/couponModel");
 const Product = require("../models/productModel");
 const Order = require("../models/orderModel");
+
 const signUp = async (req, res, next) => {
   const { error } = validateUser(req.body);
   if (error) return next(new ErrorResponse(error.details[0].message));
@@ -110,10 +110,10 @@ const deleteUser = async (req, res, next) => {
 };
 const userCart = async (req, res, next) => {
   const { cart } = req.body;
-  const { _id } = req.user;
+  const { id } = req.user;
   try {
     let products = [];
-    const user = await User.findById(_id);
+    const user = await User.findById(id);
     const alreadyExistCart = await Cart.findOne({ orderby: user._id });
     if (alreadyExistCart) {
       alreadyExistCart.remove();
@@ -164,29 +164,66 @@ const emptyCart = async (req, res) => {
     throw new Error(error);
   }
 };
-
 const applyCoupon = async (req, res) => {
   const { coupon } = req.body;
-  const { _id } = req.user;
+  const userId = req.user.id;
+
   const validCoupon = await Coupon.findOne({ name: coupon });
-  if (validCoupon === null) {
+  if (!validCoupon) {
     throw new Error("Invalid Coupon");
   }
-  const user = await User.findOne({ _id });
-  let { cartTotal } = await Cart.findOne({
-    orderby: user._id,
-  }).populate("products.product");
+
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const cart = await Cart.findOne({ orderby: user._id }).populate(
+    "products.product"
+  );
+  if (!cart) {
+    throw new Error("Cart not found");
+  }
+
+  let { cartTotal } = cart;
   let totalAfterDiscount = (
     cartTotal -
     (cartTotal * validCoupon.discount) / 100
   ).toFixed(2);
+
   await Cart.findOneAndUpdate(
     { orderby: user._id },
     { totalAfterDiscount },
     { new: true }
   );
+
   res.json(totalAfterDiscount);
 };
+
+// const applyCoupon = async (req, res) => {
+//   const { coupon } = req.body;
+//   const userId = req.user.id;
+//   console.log("id", req.user.id);
+//   const validCoupon = await Coupon.findOne({ name: coupon });
+//   if (validCoupon === null) {
+//     throw new Error("Invalid Coupon");
+//   }
+//   const user = await User.findOne({ userId });
+//   console.log(user);
+//   let { cartTotal } = await Cart.findOne({
+//     orderby: user._id,
+//   }).populate("products.product");
+//   let totalAfterDiscount = (
+//     cartTotal -
+//     (cartTotal * validCoupon.discount) / 100
+//   ).toFixed(2);
+//   await Cart.findOneAndUpdate(
+//     { orderby: user._id },
+//     { totalAfterDiscount },
+//     { new: true }
+//   );
+//   res.json(totalAfterDiscount);
+// };
 
 const createOrder = async (req, res) => {
   const { COD, couponApplied } = req.body;
